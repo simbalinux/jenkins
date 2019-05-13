@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if ! rpm -qa |grep -q jenkins; then
+
+  # tools
+  sudo yum install -y tree curl wget jq vim
+
+  # install java
+  sudo yum install -y java-1.8.0-openjdk-devel
+  
+  # install jenkins repo && package
+  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo
+  sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+  sudo yum install -y jenkins
+  sudo systemctl enable jenkins 
+  sudo systemctl start jenkins 
+
+  # check the process exists 
+  ps -ef |grep jenkins
+
+  # browse the jenkins files
+  ls -l /var/lib/jenkins
+fi
