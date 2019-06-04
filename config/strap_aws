@@ -1,0 +1,88 @@
+#!/bin/bash
+set -ex
+
+# ----- setup everything IF ! exist -----
+
+if ! dpkg -l |grep -q ansible; then
+  
+  # requirements
+  
+  # update system first
+  sudo apt-get update -y 
+  
+  # install utilities
+  sudo apt-get install curl wget vim git unzip -y
+  
+  # install python-pip 
+  sudo apt-get install python-pip -y
+  
+  sudo pip install --upgrade pip
+  
+  # install aws_cli
+  sudo pip install awscli
+  sudo pip install --upgrade awscli
+  
+  aws --version
+  
+  # now configure aws cli  (https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
+  # aws configure --profile superhero
+  
+  # unzip to /tmp will be removed on reboot while in /tmp
+  cd /tmp
+  wget https://releases.hashicorp.com/terraform/0.11.14/terraform_0.11.14_linux_amd64.zip
+  unzip terraform*.zip
+  
+  chmod +x terraform*
+  
+  # this adds terraform to the path
+  sudo mv terraform /usr/local/bin/terraform
+  
+  
+  # now configure aws cli
+  # https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html
+  
+  
+  # installing ansible 
+  sudo add-apt-repository ppa:ansible/ansible -y 
+  sudo apt-get update -y
+  sudo apt-get install ansible -y
+  
+  # check IF ssh exist else create no password, ideal for shell scripts
+  if [ -f $HOME/.ssh/id_rsa ]; then
+    echo rsa key installed
+  else
+    ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
+  fi
+  
+  ##   these ssh steps are important for the automation to work properly.
+  
+  # enable the ssh agent
+  eval `ssh-agent -s`
+  # add key to the agent
+  ssh-add ~/.ssh/id_rsa
+  # view/list key 
+  ssh-add -l
+  
+  # disable host key checking, used to avoid prompt when connecting to "new" servers to provision.
+  sudo sed -i 's/#host_key_checking = False/host_key_checking = False/g' /etc/ansible/ansible.cfg
+  
+  # make new working DIR
+  mkdir $HOME/terransible
+fi
+
+# ---- setup working DIR IF ! exist ----
+
+if [ ! -d $HOME/terransible ]; then 
+  # change to the terraform dir
+  cd $HOME/terransible
+  
+  # create the structure IF ! exist
+  touch main.tf terraform.tfvars variables.tf userdata aws_hosts wordpress.yml s3update.yml
+  
+  # view layout
+  tree . 
+  
+  # ensure you put this in your .gitignore 
+  cp -rf /vagrant/config/terraform.tfvars $HOME/terransible/
+  
+fi
