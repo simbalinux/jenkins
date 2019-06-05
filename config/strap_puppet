@@ -1,0 +1,22 @@
+#!/usr/bin/env bash 
+set -ex
+# for centos RPM's visit yum.puppetlabs.com and browse for your RPM releast version && install server
+if ! rpm -qa | grep -q puppet-agent; then 
+
+  sudo rpm -ihv http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+  sudo yum -y update
+  sudo yum -y install puppet-agent
+  
+  # disable "secure_path" in sudoers file 
+  sudo sed -i 's\Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin\#Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin\g' /etc/sudoers
+  
+  # run the puppet apply
+  
+fi
+
+cd $HOME/puppet
+source $HOME/.bashrc 
+sudo puppet apply --modulepath ./modules manifests/site.pp
+
+
+
