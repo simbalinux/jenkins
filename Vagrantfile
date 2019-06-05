@@ -19,9 +19,11 @@ Vagrant.configure("2") do |config|
     pm.vm.hostname = "jenkins.local"
     pm.vm.network "forwarded_port", guest: 8080, host: 3444
     pm.vm.network "forwarded_port", guest: 80, host: 80 
-    pm.vm.provision "shell", path: "./config/strap_jenkins", privileged: false 
+    #pm.vm.provision "shell", path: "./config/strap_jenkins", privileged: false 
     # ---- we will use nginx as reverse proxy sitting in front of jenkins
-    pm.vm.provision "shell", path: "./config/strap_proxy", privileged: false 
+    #pm.vm.provision "shell", path: "./config/strap_proxy", privileged: false 
+    pm.vm.provision "file", source: "./puppet", destination: "$HOME/puppet"
+    pm.vm.provision "shell", path: "./config/strap_puppet", privileged: false 
   end
  config.vm.define  "awscli" do |host|
     host.vm.box = "ubuntu/xenial64"
