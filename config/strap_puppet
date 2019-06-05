@@ -17,6 +17,7 @@ fi
 cd $HOME/puppet
 source $HOME/.bashrc 
 sudo puppet apply --modulepath ./modules manifests/site.pp
+sudo setsebool -P httpd_can_network_connect 1
 
 
 
