@@ -19,7 +19,7 @@ class jenkins::install {
         source => 'https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-11.noarch.rpm'
     }
 
-    $packages = [ 'jenkins', 'java-1.8.0-openjdk', 'nginx', 'git' ]
+    $packages = [ 'jenkins', 'java-1.8.0-openjdk', 'nginx', 'git', 'vim' ]
 
     package { $packages:
         ensure    => present,
