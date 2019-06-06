@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -ex
+# generate the crumb
+var=$(curl -s 'http://localhost:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)' -u admin:admin)
+# create the new job 
+curl -s -XPOST 'http://localhost:8080/createItem?name=python-project-new' -u admin:admin --data-binary @config.xml -H "$var" -H "Content-Type:text/xml"
+# reload
+#curl -s -XPOST 'http://localhost:8080/reload' -u admin:admin -H "$var"
