@@ -13,18 +13,19 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "jenkins" do |pm|
     pm.vm.box = "centos/7"
-    # ----- if you would like a static ip and comment out "public_network" 
+    # ----- if you would like a static, comment out "public_network" and uncomment "private_network" 
     #pm.vm.network "private_network", ip: "192.168.35.10"
     pm.vm.network "public_network"
     pm.vm.hostname = "jenkins.local"
+    # jenkins will listen on 8080 which will be directed by our NGINX reverse proxy 
     pm.vm.network "forwarded_port", guest: 8080, host: 3444
     pm.vm.network "forwarded_port", guest: 80, host: 80 
 
-    # ----- inline shell jenkins install  && reverse proxy setup using nginx -----
+    # ----- inline shell jenkins install  && reverse proxy setup using nginx ( traditional inline shell bootstrap ) -----
     #pm.vm.provision "shell", path: "./config/strap_jenkins", privileged: false 
     #pm.vm.provision "shell", path: "./config/strap_proxy", privileged: false 
 
-    # ----- copy over the puppet files && puppet apply using "./config/strap_puppet" -----
+    # ----- copy over the puppet files && puppet apply using "./config/strap_puppet ( install JENKINS & NGINX FULL bootstrap ) -----
     pm.vm.provision "file", source: "./puppet", destination: "$HOME/puppet"
     pm.vm.provision "shell", path: "./config/strap_puppet", privileged: false 
 

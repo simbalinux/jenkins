@@ -1,6 +1,8 @@
 #!/usr/bin/env bash 
 set -ex
-# for centos RPM's visit yum.puppetlabs.com and browse for your RPM releast version && install server
+# for centos RPM's visit yum.puppetlabs.com and browse for your RPM release version && install server
+
+# ---- if rpm not installed then install -----
 if ! rpm -qa | grep -q puppet-agent; then 
 
   sudo rpm -ihv http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
@@ -10,18 +12,22 @@ if ! rpm -qa | grep -q puppet-agent; then
   # disable "secure_path" in sudoers file 
   sudo sed -i 's\Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin\#Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin\g' /etc/sudoers
   
-  # run the puppet apply
   
 fi
 
 cd $HOME/puppet
 source $HOME/.bashrc 
+
+# ----- puppet apply on the files copied over from ./puppet/* in local working directory of vagrant 
 sudo puppet apply --modulepath ./modules manifests/site.pp
+
+# ----- selinux disable for NGINX to work properly -----
 sudo setsebool -P httpd_can_network_connect 1
+
 # create ssh-key pair for github for jenkins master 
 ssh-keygen -f $HOME/.ssh/id_rsa -t rsa -N ''
 
+# ----- restart the services -----
 sudo systemctl restart jenkins 
 sudo systemctl restart nginx 
-sleep 30
 
