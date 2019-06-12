@@ -26,6 +26,17 @@ Understanding Jenkins & Related Technologies
   * setting up a dedicated storage for jenkins (disaster recovery, we will use Terraform)
   * installing jre locally on jenkins master
 
- 
+4. Steps to get up the environment
+  * "vagrant up jenkins" 
+    * Will deploy jenkins master w/ NGINX reverse proxy using Puppet
+    * During setup/deploy get IP address of guest VM (jenkins) add your HOST /etc/hosts file (to obtain the Jenkins UI access)
+    * Open browser on HOST machine and enter "http://jenkins" login will be "admin/admin" can be changed in groovy scripts. 
+    * READ the Vagrantfile comments for explanation of provision process of files and scripts that are executed.
+  * Manual Steps:
+    * Copy the public key created in $HOME/.ssh into your github account under deploy keys
+    * Login to Jenkins UI and go to "credentials" and add a ssh private key credential us the private key in $HOME on Jenkins.
+    * Login to Jenkins UI and click on the job "python-project-new" and attach the private key credential you added.
+    * Now run the test job and you will notice success & cleanup will occur in output log.
+    * The Python Test job is already part of the Puppet provisioning and made avaialable post install. 
 
 https://learning.oreilly.com/videos/practical*jenkins/9781788398749
