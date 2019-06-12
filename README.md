@@ -28,7 +28,7 @@ Understanding Jenkins & Related Technologies
 
 4. Steps to get up the environment
   * "vagrant up jenkins" 
-    * Will deploy jenkins master w/ NGINX reverse proxy using Puppet
+    - Will deploy jenkins master w/ NGINX reverse proxy using Puppet
     * During setup/deploy get IP address of guest VM (jenkins) add your HOST /etc/hosts file (to obtain the Jenkins UI access)
     * Open browser on HOST machine and enter "http://jenkins" login will be "admin/admin" can be changed in groovy scripts. 
     * READ the Vagrantfile comments for explanation of provision process of files and scripts that are executed.
