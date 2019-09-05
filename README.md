@@ -39,4 +39,4 @@ Understanding Jenkins & Related Technologies
     * Now run the test job and you will notice success & cleanup will occur in output log.
     * The Python Test job is already part of the Puppet provisioning and made avaialable post install. 
 
-https://learning.oreilly.com/videos/practical*jenkins/9781788398749
+
